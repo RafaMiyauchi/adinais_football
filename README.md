@@ -87,13 +87,13 @@ I have no feedback for the tutorial 2, other than cross checking the information
 Here are the results of testing the data delivery endpoints.
 
 ### 1. Get All Products (JSON)
-![All Products in JSON](images\jsonlocalhost.jpg)
+![All Products in JSON](images/jsonlocalhost.jpg)
 
 ### 2. Get All Products (XML)
-![All Products in XML](images\xmllocalhost.jpg)
+![All Products in XML](images/xmllocalhost.jpg)
 
 ### 3. Get Product by ID (JSON)
-![Product by ID in JSON](images\jsonid.jpg)
+![Product by ID in JSON](images/jsonid.jpg)
 
 ### 4. Get Product by ID (XML)
-![Product by ID in XML](images\xmlid.jpg)
+![Product by ID in XML](images/xmlid.jpg)
