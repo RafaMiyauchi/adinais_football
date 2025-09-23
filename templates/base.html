@@ -29,10 +29,29 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'main:create_product' %}">Add Product</a>
-                    </li>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item me-2">
+                            <div class="text-end">
+                                <span class="text-white">Hi, {{ user.username }}!</span>
+                                {% if user.last_login %}
+                                <small class="d-block" style="color: #adb5bd;">
+                                    Last login: {{ user.last_login|date:"d M Y, P" }}
+                                </small>
+                                {% endif %}
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-light btn-sm" href="{% url 'main:logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'main:login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'main:register' %}">Register</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

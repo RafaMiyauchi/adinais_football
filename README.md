@@ -97,3 +97,24 @@ Here are the results of testing the data delivery endpoints.
 
 ### 4. Get Product by ID (XML)
 ![Product by ID in XML](images/xmlid.jpg)
+
+## Assignment 3 Questions:
+
+### What is Django's AuthenticationForm? Explain its advantages and Disadvantages
+It's a built in class from Django to handles anything about user login. It is a way to validates a user's credentials such as their username and password (what this website use) with the databases. The main advantage of AuthenticationForm is how it has a built-in security where it may handle most security checks automatically and error handling without us writing boilerplate code for a login form. The main disadvantage of AuthenticationForm is it's the bare minimum meaning it has limited customization and genereic appearance. For example, if we want to login with an email address, we must override its method. 
+
+### What is the difference between authentication and authorization? How does Django implement the two concepts?
+Authentication is the process of verifying who a user is. Whereas, Authorization is the process of verifying what an authenticated user is allowed to do. Within Django, it has a built in framework called django.contrib.auth to handle both aspect. Authentication is managed via the User model, middleware, and helper functions like authenticate() (to check credentials) and login() (to create a session for the user). While authorizaiton is handled by a built-in permission and groups system and decorator.
+
+### What are the benefits and drawbacks of using sessions and cookies in storing the state of a web application?
+To start, a cookie is a small data stored on the user's browser whereas a session is a mechanism to store user-specific data on the server. The main benefits is state management like personalized content and user logins sectios. Another is Security (sessions) where you can store sensitive infromation in a server-side session. The drawbacks are first the limited Size (Cookies), where it is limited to a small size (around 4KB), so they cannot be used to store large amounts of data. Whereas server Load (Sessions) where each active session consumes server memory and/or storage. For example, on a website with millions of active users, this can become a significant performance and scalability bottleneck.
+
+### In web development, is the usage of cookies secure by default, or is there any potential risk that we should be aware of? How does Django handle this problem?
+No, the usage of cookies is not secure by default. There are a couple, but from what I learned in the slides, the two are regardingt Cross-Site Scripting (XSS) and Cross-Site Request Forgery (CSRF). XSS is a vulnerability that allows someone to inject JavaScript code that will be executed by the client. The potential problem with this vulnerability is that an attacker could steal cookies from users who are already logged into a website. Whereas CSRF could happen when an attacker tricks a logged-in user into clicking a link that performs an unwanted action on a website they are authenticated with. The browser will automatically include the authentication cookie with the request, making the malicious request seem legitimate to the server.
+
+For CSRF, Django has a built-in CSRF protection framework. It works by adding a hidden csrfmiddlewaretoken field to POST forms. This token is unique to each user session. On submission, Django verifies this token, ensuring the request originated from the site itself and not from a malicious third-party source.
+
+For XSS, Django’s Built in Security Features Cross Site Scripting (XSS) Protection. Using Django templates protects us against the majority of XSS attacks. Additionally, we can also use is_valid() in Django templates, forms.py and views.py
+
+### Explain how you implemented the checklist above step-by-step (not just following the tutorial).
+There are three documents that I am mostly working on, the first and foremost is my views.py, where I implemented register, login_user and logout for the authentication. After I do that, I worked on mapping each authentication view to a specific URL path to make it accessible from the browser. A few adjustment to the templates (html documents) to facilitate the authentication process such as the login.html and register.html. In addition to that I also added decorate @login_required(login_url='/login') to the show_main view to redirect any unauthenticated users to the login page. To finalize I update the model and view logic where in models.py I added ForeignKey relationship to the Product model, whilst editing the create_product in views.py in order to automatically assin the currently logged-in user to any new product being created. I tested all the changes in my local house by creating an account and trying the filter, session and cookies feature
