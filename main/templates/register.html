@@ -1,32 +1,65 @@
 {% extends 'base.html' %}
 
-{% block meta %}
-<title>Register</title>
-{% endblock meta %}
+{% block title %}Register - Adinais Football{% endblock %}
 
 {% block content %}
+<div class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md animate-fade-in-up">
+        <div class="glassmorphism rounded-3xl p-8 shadow-2xl">
+            <div class="text-center mb-8">
+                <h1 class="font-orbitron text-4xl font-black text-white">JOIN THE SQUAD</h1>
+                <p class="text-brand-light-gray mt-2">Create your Adinais Football account.</p>
+            </div>
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="relative">
+                    {{ field }}
+                    <label for="{{ field.id_for_label }}" class="absolute left-4 -top-2.5 text-xs text-gray-400 bg-brand-space-gray px-1">{{ field.label }}</label>
+                    {% if field.help_text %}
+                        <p class="text-xs text-gray-500 mt-1 pl-1">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="text-red-400 text-xs mt-1 pl-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                
+                <div>
+                    <button type="submit" class="w-full py-4 px-4 bg-brand-accent-lime hover:bg-opacity-90 rounded-lg text-brand-deep-blue font-bold text-lg transition duration-300 transform hover:scale-105">CREATE ACCOUNT</button>
+                </div>
+            </form>
 
-<div>
-  <h1>Register</h1>
-
-  <form method="POST">
-    {% csrf_token %}
-    <table>
-      {{ form.as_table }}
-      <tr>
-        <td></td>
-        <td><input type="submit" name="submit" value="Register" /></td>
-      </tr>
-    </table>
-  </form>
-
-  {% if messages %}
-  <ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
+            {% if messages %}
+                <div class="mt-6">
+                    {% for message in messages %}
+                        <div class="bg-blue-500 bg-opacity-50 border border-blue-500 text-white p-3 rounded-lg text-center" role="alert">
+                          {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <p class="text-center text-sm text-gray-400 mt-8">
+                Already have an account?
+                <a href="{% url 'main:login' %}" class="font-bold text-brand-accent-lime hover:underline">Login</a>
+            </p>
+        </div>
+    </div>
 </div>
-
-{% endblock content %}
+{% comment %} Add script to apply Tailwind classes to form fields {% endcomment %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('form input').forEach(field => {
+             if(field.type !== 'submit' && field.type !== 'hidden') {
+                field.classList.add('w-full', 'p-4', 'form-input', 'rounded-lg', 'text-white', 'placeholder-gray-500', 'focus:outline-none', 'transition-all', 'duration-300');
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                if (label) {
+                    field.placeholder = label.textContent;
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

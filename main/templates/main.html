@@ -1,42 +1,104 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Home - Adinais Football
+    Adinais Football - The Pitch
 {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0">Our Products</h1>
-    <div>
-        <a href="{% url 'main:create_product' %}" class="btn btn-primary">Add New Product</a>
+<div class="container mx-auto px-4 py-8">
+    <div class="text-center mb-12 animate-fade-in-up">
+        <h1 class="font-orbitron text-5xl font-black text-white tracking-wide">THE ARSENAL</h1>
+        <p class="text-brand-light-gray mt-2 text-lg">Browse our elite collection of football gear.</p>
+    </div>
+
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 animate-fade-in-up" style="animation-delay: 100ms;">
+        <div class="flex space-x-2 border border-gray-700 rounded-lg p-1 mb-4 md:mb-0">
+            <a href="{% url 'main:show_main' %}?filter=all" class="px-4 py-2 rounded-md text-sm font-medium transition-colors {% if request.GET.filter != 'my' %}bg-brand-space-gray text-white{% else %}text-gray-400 hover:bg-gray-800{% endif %}">All Products</a>
+            <a href="{% url 'main:show_main' %}?filter=my" class="px-4 py-2 rounded-md text-sm font-medium transition-colors {% if request.GET.filter == 'my' %}bg-brand-space-gray text-white{% else %}text-gray-400 hover:bg-gray-800{% endif %}">My Products</a>
+        </div>
+        <a href="{% url 'main:create_product' %}" class="bg-brand-accent-lime hover:bg-opacity-90 text-brand-deep-blue font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 flex items-center space-x-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            <span>Add New Product</span>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 stagger-load">
+        {% for product in products %}
+        <div class="product-card group relative bg-brand-space-gray rounded-2xl shadow-lg overflow-hidden border border-transparent hover:border-brand-accent-lime transition-all duration-300"
+            data-name="{{ product.name }}"
+            data-brand="{{ product.brand }}"
+            data-category="{{ product.category }}"
+            data-price="{{ product.price }}"
+            data-rating="{{ product.rating }}"
+            data-stock="{{ product.stock }}"
+            data-description="{{ product.description|truncatewords:30 }}"
+            data-thumbnail="{{ product.thumbnail }}"
+            data-url="{% url 'main:show_detail' product.id %}"
+        >
+            <div class="absolute top-4 right-4 z-10 bg-brand-deep-blue bg-opacity-70 px-3 py-1 rounded-full text-xs font-bold text-brand-accent-lime">{{ product.category }}</div>
+            <img src="{{ product.thumbnail }}" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" alt="{{ product.name }}">
+            <div class="p-5">
+                <h2 class="text-xl font-bold font-orbitron text-white truncate">{{ product.name }}</h2>
+                <p class="text-gray-400 text-sm mb-3">{{ product.brand }}</p>
+                <div class="flex justify-between items-center">
+                    <p class="text-brand-accent-lime font-bold text-2xl">Rp{{ product.price }}</p>
+                    <div class="flex items-center space-x-1">
+                        <span class="text-yellow-400">⭐</span>
+                        <span class="text-white font-semibold">{{ product.rating }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <button class="quick-view-btn bg-brand-accent-lime text-brand-deep-blue font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-transform flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    <span>Quick View</span>
+                </button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-20 animate-fade-in-up">
+            <svg class="w-40 h-40 mx-auto text-gray-700 drop-shadow-[0_0_10px_rgba(163,255,0,0.5)]" viewBox="0 0 24 24" fill="none" stroke="#A3FF00" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" fill="#161B22"></circle>
+              <path d="M12 2a10 10 0 0 0-4.47 1.23l2.83 5.66 4.47-1.23L12 2z"></path>
+              <path d="M3.23 9.53l5.66 2.83-1.23 4.47-5.66-2.83 1.23-4.47z"></path>
+              <path d="M20.77 9.53l-5.66 2.83 1.23 4.47 5.66-2.83-1.23-4.47z"></path>
+              <path d="M12 22a10 10 0 0 0 4.47-1.23l-2.83-5.66-4.47 1.23L12 22z"></path>
+              <path d="M8.89 8.89l-1.23 4.47 4.47 1.23 1.23-4.47-4.47-1.23z"></path>
+            </svg>
+            <h2 class="text-3xl font-orbitron font-bold text-gray-400 mt-6">THE PITCH IS EMPTY</h2>
+            <p class="text-gray-500 mt-2">No products found. Be the first to add something to the arsenal.</p>
+        </div>
+        {% endfor %}
     </div>
 </div>
 
-<div class="mb-4">
-    <a href="{% url 'main:show_main' %}?filter=all" class="btn btn-info">All Products</a>
-    <a href="{% url 'main:show_main' %}?filter=my" class="btn btn-outline-info">My Products</a>
-</div>
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    {% for product in products %}
-    <div class="col">
-        <div class="card h-100">
-            
-            <img src="{{ product.thumbnail }}" class="card-img-top" alt="{{ product.name }}">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text text-muted">{{ product.brand }} - {{ product.category }}</p>
-                <h6 class="card-subtitle mb-2">Rp{{ product.price }}</h6>
-                <p class="card-text flex-grow-1">{{ product.description|truncatewords:15 }}</p>
-                <a href="{% url 'main:show_detail' product.id %}" class="btn btn-dark mt-auto">View Details</a>
+<!-- Quick View Modal -->
+<div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+    <div id="modal-content" class="glassmorphism rounded-2xl shadow-2xl w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden transform scale-95 transition-transform duration-300">
+        <img id="modal-img" src="" alt="Product Image" class="w-full h-full object-cover">
+        <div class="p-8 flex flex-col">
+            <div>
+                <p id="modal-category" class="font-semibold text-brand-accent-lime mb-1"></p>
+                <h2 id="modal-name" class="font-orbitron text-3xl font-bold text-white"></h2>
+                <p id="modal-brand" class="text-gray-400 text-lg mb-4"></p>
+                <p id="modal-price" class="text-brand-accent-lime text-4xl font-bold mb-4"></p>
+                <p id="modal-description" class="text-brand-light-gray mb-6 h-24 overflow-y-auto"></p>
             </div>
+            <div class="grid grid-cols-2 gap-4 text-center mt-auto">
+                 <div class="bg-brand-space-gray p-4 rounded-xl">
+                    <p class="text-sm text-gray-400">Rating</p>
+                    <p id="modal-rating" class="text-xl font-bold text-white flex items-center justify-center space-x-1"></p>
+                </div>
+                <div class="bg-brand-space-gray p-4 rounded-xl">
+                    <p class="text-sm text-gray-400">Stock</p>
+                    <p id="modal-stock" class="text-xl font-bold text-green-400"></p>
+                </div>
+            </div>
+            <a id="modal-link" href="#" class="w-full text-center bg-brand-accent-lime hover:bg-opacity-90 text-brand-deep-blue font-bold py-3 mt-6 rounded-lg transition duration-300">View Full Details</a>
         </div>
+        <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
     </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="alert alert-warning" role="alert">
-            No products available yet. Add one to get started!
-        </div>
-    </div>
-    {% endfor %}
 </div>
 {% endblock %}

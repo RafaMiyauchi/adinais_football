@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Product - Adinais Football{% endblock %}
+{% block title %}Edit Product - Adinais Football{% endblock %}
 
 {% block content %}
 <div class="flex items-center justify-center min-h-screen p-4">
     <div class="w-full max-w-2xl animate-fade-in-up">
         <div class="glassmorphism rounded-3xl p-8 shadow-2xl">
             <div class="text-center mb-8">
-                <h1 class="font-orbitron text-4xl font-black text-white">ADD TO ARSENAL</h1>
-                <p class="text-brand-light-gray mt-2">Introduce a new piece of gear to the collection.</p>
+                <h1 class="font-orbitron text-4xl font-black text-white">REFINE GEAR</h1>
+                <p class="text-brand-light-gray mt-2">Update the details for {{ product.name }}.</p>
             </div>
             <form method="POST" class="space-y-6">
                 {% csrf_token %}
@@ -24,8 +24,8 @@
                 {% endfor %}
                 
                 <div class="flex space-x-4 pt-4">
-                    <a href="{% url 'main:show_main' %}" class="w-full text-center py-4 px-4 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-bold transition duration-300">Cancel</a>
-                    <button type="submit" class="w-full py-4 px-4 bg-brand-accent-lime hover:bg-opacity-90 rounded-lg text-brand-deep-blue font-bold text-lg transition duration-300">Add Product</button>
+                    <a href="{% url 'main:show_detail' product.id %}" class="w-full text-center py-4 px-4 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-bold transition duration-300">Cancel</a>
+                    <button type="submit" class="w-full py-4 px-4 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-bold text-lg transition duration-300">Save Changes</button>
                 </div>
             </form>
         </div>

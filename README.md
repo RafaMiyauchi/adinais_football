@@ -41,7 +41,7 @@ The Model-View-Template (MVT) pattern in Django handles web requests in a struct
 
 6. Finally, Django sends the final, rendered HTML back to the user's browser, which displays the web page.
 
-## Assignment 1 Questions:
+## Assignment 2 Questions:
 
 ### What is the role of `settings.py`?
 The `settings.py` file is the central configuration hub for a Django project. It contains all the settings that define how the project runs. It includes:
@@ -62,7 +62,7 @@ I think Django is chosen as a starting point for the convenient aspect of databa
 ### Feedback for Tutorial 1
 I have personally no issue with Tutorial 1, but one aspect that makes it less effective was the fact that it was held online making communication and problem solvig requires us to share our screen which is a bit of an inconveniences especially during debugging stage
 
-## Assignment 2 Questions:
+## Assignment 3 Questions:
 
 ### Purpose of Data Delivery during Platform Implementatition
 We need data delivery because modern applications are rarely built as a single piece. A universal format like JSON or XML acts as a common language. It allows the backend (our Django app) to "serialize" its data, sending it in a way that any frontend, be it a web browser, a mobile app, or even another server, can easily understand and work with.
@@ -76,7 +76,7 @@ The is_valid() method acts as a crucial security and data checkpoint. For exampl
 ### Purpose of csrf_token?
 It's basically a security feature that protects against Cross-Site Request Forgery (CSRF) attacks. A CSRF attack tricks a logged-in user into unknowingly submitting a malicious request on a website they trust. The csrf_token prevents this by placing a unique, secret token in every form. When the form is submitted, the server checks if the submitted token matches the one it issued. The attacker's fake form won't have this correct token, so Django will reject the malicious request, protecting the user.
 
-### The Process to Assignment 2
+### The Process to Assignment 3
 Well, mostly I followed the breakdown from the Tutorial 2, but I went from models.py to check what are the data structure, then for this assignment 3, I start from the forms.py making sure to match it with the models.py. The important steps, which is the first point of this assignment is on views.py where I make 4 functions correlating with xml and json. In urls.py I then mapped each view to a specific URL, making the application's features accessible to users. Finally, I built the HTML templates to create the user interface, using Django's template language to dynamically display the data from the views.
 
 ### Feedback to TAs for Tutorial 2
@@ -98,7 +98,7 @@ Here are the results of testing the data delivery endpoints.
 ### 4. Get Product by ID (XML)
 ![Product by ID in XML](images/xmlid.jpg)
 
-## Assignment 3 Questions:
+## Assignment 4 Questions:
 
 ### What is Django's AuthenticationForm? Explain its advantages and Disadvantages
 It's a built in class from Django to handles anything about user login. It is a way to validates a user's credentials such as their username and password (what this website use) with the databases. The main advantage of AuthenticationForm is how it has a built-in security where it may handle most security checks automatically and error handling without us writing boilerplate code for a login form. The main disadvantage of AuthenticationForm is it's the bare minimum meaning it has limited customization and genereic appearance. For example, if we want to login with an email address, we must override its method. 
@@ -118,3 +118,49 @@ For XSS, Django’s Built in Security Features Cross Site Scripting (XSS) Protec
 
 ### Explain how you implemented the checklist above step-by-step (not just following the tutorial).
 There are three documents that I am mostly working on, the first and foremost is my views.py, where I implemented register, login_user and logout for the authentication. After I do that, I worked on mapping each authentication view to a specific URL path to make it accessible from the browser. A few adjustment to the templates (html documents) to facilitate the authentication process such as the login.html and register.html. In addition to that I also added decorate @login_required(login_url='/login') to the show_main view to redirect any unauthenticated users to the login page. To finalize I update the model and view logic where in models.py I added ForeignKey relationship to the Product model, whilst editing the create_product in views.py in order to automatically assin the currently logged-in user to any new product being created. I tested all the changes in my local house by creating an account and trying the filter, session and cookies feature
+
+## Assignment 5 Questions:
+
+### **CSS Selector Priority**
+
+I learned that when multiple CSS rules apply to one element, the browser decides which one wins based on specificity. The order from strongest to weakest is: `!important`, inline styles (the `style="..."` attribute), ID selectors (`#my-id`), class selectors (`.my-class`), and finally, element selectors (`div`). If two selectors are equally specific, the one that comes last in the stylesheet gets applied.
+
+### **Responsive Design**
+
+I believe responsive design is essential because it makes my website look good and work well on any device, from a phone to a desktop. This is great for user experience, helps with Google search rankings, and makes it easier for me to maintain the code since I only have one version to manage.
+
+* **Good Example (FIFA.com):** I looked at the FIFA website. On my computer, it's a big, wide layout. On my phone, everything neatly stacks into a single column, and the menu changes to a mobile-friendly version. It's super easy to use anywhere.
+
+* **Bad Example (1996 Space Jam Website):** For a non-responsive example, I checked out the original Space Jam movie site. On a phone, it's basically unusable. The whole page just shrinks down, and I have to zoom and scroll around to read anything, which shows exactly why we need responsive design today.
+
+### **The Box Model**
+
+I understand the CSS Box Model as a set of layers for every HTML element.
+
+* **Padding:** This is the space *inside* an element's border, pushing the content away from the edge.
+
+* **Border:** This is the line that goes *around* the padding and content.
+
+* **Margin:** This is the space *outside* the border, used to push elements away from each other.
+
+### **Flexbox vs. Grid**
+
+For this project, I used both Flexbox and Grid to create the layout.
+
+* **Flexbox:** I found Flexbox is perfect for arranging items in a single line (a row or a column). I used it a lot for centering content inside containers and for aligning the buttons in my forms and navbar.
+
+* **Grid:** Grid was my choice for the overall page structure, specifically for the product list. It let me create a two-dimensional grid of cards that stays perfectly aligned in rows and columns, which is harder to do with Flexbox.
+
+### **How I Made This**
+
+Here's a quick rundown of the steps I took to build and design this assignment:
+
+1. **Getting Started:** First things first, I set up a new base template (`base.html`) and plugged in **Tailwind CSS** using the CDN. This gave me all the style utilities I needed. I also wired up the basic views and URLs for the new "Edit Product" feature.
+
+2. **What I think when I create the Vibe:** I didn't want a generic site, so I created a custom "futuristic sports" theme. I picked the `Orbitron` font, created a custom color palette with neon lime and dark grays, and used a "glassmorphism" effect to give the cards a cool, frosted look.
+
+3. **Building the Navbar:** I built a fully responsive navigation bar from scratch. It looks great on desktop, and on mobile, it collapses into a hamburger menu that I made interactive with a bit of JavaScript.
+
+4. **Making Cards Interactive:** I redesigned the product cards and added a "Quick View" feature. When a user clicks the button on a card, a modal pops up showing the product details. I research a bit in youtube and finds out that it used a bit of JavaScript and `data-*` attributes to pull the product info into the modal instantly without reloading the page.
+
+5. **Fixing Bugs:** I ran into a bug where my forms weren't getting styled. I fixed this by adding a small script to the `login`, `register`, `create`, and `edit` pages that applies the correct Tailwind classes to the form fields after the page loads.
