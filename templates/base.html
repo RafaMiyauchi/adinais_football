@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -64,6 +65,9 @@
             opacity: 0;
             animation: fade-in-up 0.5s ease-out forwards;
         }
+        .toast-item {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="text-brand-light-gray">
@@ -78,13 +82,16 @@
                     </a>
                 </div>
                 
-                <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center space-x-4">
-                    <span class="font-semibold text-white">{{ user.username }}</span>
-                    <a href="{% url 'main:logout' %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition-all duration-300 transform hover:scale-105">Logout</a>
+                    {% if user.is_authenticated %}
+                        <span class="font-semibold text-white">{{ user.username }}</span>
+                        <a href="{% url 'main:logout' %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition-all duration-300 transform hover:scale-105">Logout</a>
+                    {% else %}
+                        <a href="{% url 'main:login' %}" class="text-white font-bold py-2 px-4 rounded-lg text-sm transition-all duration-300">Login</a>
+                        <a href="{% url 'main:register' %}" class="bg-brand-accent-lime hover:bg-opacity-90 text-brand-deep-blue font-bold py-2 px-4 rounded-lg text-sm transition-all duration-300 transform hover:scale-105">Register</a>
+                    {% endif %}
                 </div>
 
-                <!-- Mobile Button -->
                 <div class="md:hidden flex items-center">
                     <button class="mobile-menu-button p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -95,11 +102,15 @@
             </div>
         </div>
 
-        <!-- Mobile Menu -->
         <div class="mobile-menu hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
-                <span class="block px-3 py-2 rounded-md text-base font-medium text-white">{{ user.username }}</span>
-                <a href="{% url 'main:logout' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-red-600 hover:bg-red-700">Logout</a>
+                 {% if user.is_authenticated %}
+                    <span class="block px-3 py-2 rounded-md text-base font-medium text-white">{{ user.username }}</span>
+                    <a href="{% url 'main:logout' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-red-600 hover:bg-red-700">Logout</a>
+                {% else %}
+                    <a href="{% url 'main:login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-700">Login</a>
+                    <a href="{% url 'main:register' %}" class="block px-3 py-2 rounded-md text-base font-medium text-brand-deep-blue bg-brand-accent-lime hover:bg-opacity-90">Register</a>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -107,6 +118,9 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+
+    {% include 'toast.html' %}
+    {% include 'modal.html' %}
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -128,9 +142,9 @@
             const modal = document.getElementById('quick-view-modal');
             const modalContent = document.getElementById('modal-content');
             const closeBtn = document.getElementById('modal-close-btn');
-            const quickViewBtns = document.querySelectorAll('.quick-view-btn');
 
             const openModal = (productData) => {
+                if (!modal || !modalContent) return;
                 document.getElementById('modal-img').src = productData.thumbnail;
                 document.getElementById('modal-name').textContent = productData.name;
                 document.getElementById('modal-brand').textContent = productData.brand;
@@ -149,15 +163,18 @@
             };
 
             const closeModal = () => {
+                if (!modal || !modalContent) return;
                 modal.classList.add('opacity-0');
                 modalContent.classList.add('scale-95');
                 setTimeout(() => modal.classList.add('hidden'), 300);
             };
 
-            quickViewBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
+            // Use event delegation for quick view buttons
+            document.body.addEventListener('click', e => {
+                const quickViewBtn = e.target.closest('.quick-view-btn');
+                if (quickViewBtn) {
                     e.stopPropagation();
-                    const card = btn.closest('.product-card');
+                    const card = quickViewBtn.closest('.product-card');
                     const productData = {
                         name: card.dataset.name,
                         brand: card.dataset.brand,
@@ -170,7 +187,7 @@
                         url: card.dataset.url,
                     };
                     openModal(productData);
-                });
+                }
             });
 
             if(closeBtn) closeBtn.addEventListener('click', closeModal);
@@ -183,5 +200,8 @@
             }
         });
     </script>
+    
+    {% block scripts %}{% endblock %}
+
 </body>
 </html>

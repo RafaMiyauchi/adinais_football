@@ -164,3 +164,50 @@ Here's a quick rundown of the steps I took to build and design this assignment:
 4. **Making Cards Interactive:** I redesigned the product cards and added a "Quick View" feature. When a user clicks the button on a card, a modal pops up showing the product details. I research a bit in youtube and finds out that it used a bit of JavaScript and `data-*` attributes to pull the product info into the modal instantly without reloading the page.
 
 5. **Fixing Bugs:** I ran into a bug where my forms weren't getting styled. I fixed this by adding a small script to the `login`, `register`, `create`, and `edit` pages that applies the correct Tailwind classes to the form fields after the page loads.
+
+## Assignment 6 Questions:
+
+### 1. What is the difference between synchronous request and asynchronous request?
+
+From what I've learned in this assignment, the main difference is how they handle waiting for a response. A **synchronous** request is "blocking"—when I send a request, my browser freezes and waits for the server to send back a full new page. I can't click or interact with anything until that entire process is finished. It’s like making a phone call and having to wait on hold, unable to do anything else.
+
+An **asynchronous** request, which is what I implemented with AJAX, is "non-blocking." I can send a request to the server in the background, and the user can continue to interact with the page. When the server sends back a small piece of data (like JSON), a little bit of JavaScript updates only the necessary part of the page. This is more like sending a text message—I can send it and then go about my day, and my phone will just notify me when a reply arrives.
+
+### 2. How does AJAX work in Django (request-response flow)?
+
+I implemented a clear request-response flow in my project to make AJAX work with Django. Here’s how I understood and built it:
+
+1.  **Event Trigger on the Frontend:** It all starts with a user action, like clicking the "Add New Product" button. This triggers a JavaScript event listener that I wrote.
+2.  **JavaScript `fetch()` Request:** The JavaScript function then uses the `fetch()` API to send a request to a specific URL on my Django server (e.g., `/create-product-ajax/`). For creating or updating, this is a `POST` request containing the form data.
+3.  **Django URL Routing:** My `urls.py` file matches this URL to a specific view I created for handling AJAX requests, like my `add_product_ajax` view.
+4.  **Django View Processing:** This view is different from a normal one. Instead of rendering a whole HTML page, it processes the incoming data, interacts with the database (like creating a new `Product` object), and then prepares a response.
+5.  **Return `JsonResponse`:** The view returns a `JsonResponse`, which sends the data (e.g., `{'status': 'success', 'message': 'Product added!'}`) back to the browser in a simple, machine-readable format.
+6.  **JavaScript DOM Manipulation:** My frontend JavaScript receives this JSON. Based on the response, it dynamically updates the page without a reload. For example, it might show a success toast, close the modal, and then call another function to refresh the product grid with the new item.
+
+### 3. What are the advantages of using AJAX compared to regular rendering in Django?
+
+After refactoring my project, I found several big advantages of using AJAX:
+
+* **Vastly Improved User Experience (UX):** This is the biggest one. The website feels so much faster and more responsive. There are no more jarring full-page reloads when I add or delete a product. The user gets instant feedback through modals and toasts, which makes the app feel more modern and interactive.
+* **Reduced Bandwidth and Server Load:** With regular rendering, Django had to rebuild and send the entire HTML page for every small change. With AJAX, the server only sends a tiny bit of JSON data. This is much more efficient and saves bandwidth, which I imagine would be very important for a real-world application with many users.
+* **Better Separation of Concerns:** Using AJAX encouraged me to think of my Django backend more like an API. The backend's job is to handle data and business logic, while the frontend's job is to handle the presentation and user interaction. This separation made my code feel cleaner and more organized.
+
+### 4. How do you ensure security when using AJAX for Login and Register features in Django?
+
+Security was a major consideration, and I made sure to rely on Django's built-in features even when using AJAX.
+
+First and foremost, my `login_ajax` and `register_ajax` views still use Django’s `AuthenticationForm` and `UserCreationForm`. These forms are crucial because they handle essential security tasks like protecting against invalid login attempts and, most importantly, correctly hashing passwords before storing them in the database. I'm not handling raw passwords in my views.
+
+For Cross-Site Request Forgery (CSRF), which is common with form submissions, a fully secure implementation would involve sending the CSRF token with the AJAX `fetch` request. [cite_start]For this assignment, I followed the tutorial's approach of using the `@csrf_exempt` decorator[cite: 1077], which is simpler for development but something I'd replace by passing the token in the request headers in a production environment.
+
+Finally, in a real production site, I would ensure all authentication traffic is sent over **HTTPS** to encrypt the data and prevent credentials from being stolen in transit.
+
+### 5. How does AJAX affect user experience (UX) on websites?
+
+AJAX completely transforms the user experience from something static into something dynamic and fluid.
+
+The most immediate effect I noticed is the **feeling of speed and responsiveness**. Because the page doesn't have to reload, actions feel instantaneous. When I add a product, the grid just updates. This is a much better experience than waiting for a blank white screen while the server renders a whole new page.
+
+Another key effect is **continuity**. The user never loses their context. For example, if they have scrolled down the product list, they can open a modal to edit a product and then close it, and they'll still be in the same scroll position. In a non-AJAX app, they would be sent to a new "edit" page and then redirected back, losing their place.
+
+Finally, AJAX allows for richer, more interactive features that are standard on modern websites. The modal forms and toast notifications in my project are direct examples of this. They provide feedback and allow for user input without interrupting their main workflow, which is a huge improvement to the overall usability of the site.

@@ -10,7 +10,7 @@
                 <h1 class="font-orbitron text-4xl font-black text-white">JOIN THE SQUAD</h1>
                 <p class="text-brand-light-gray mt-2">Create your Adinais Football account.</p>
             </div>
-            <form method="POST" class="space-y-6">
+            <form id="register-form" method="POST" class="space-y-6">
                 {% csrf_token %}
                 
                 {% for field in form %}
@@ -30,16 +30,6 @@
                     <button type="submit" class="w-full py-4 px-4 bg-brand-accent-lime hover:bg-opacity-90 rounded-lg text-brand-deep-blue font-bold text-lg transition duration-300 transform hover:scale-105">CREATE ACCOUNT</button>
                 </div>
             </form>
-
-            {% if messages %}
-                <div class="mt-6">
-                    {% for message in messages %}
-                        <div class="bg-blue-500 bg-opacity-50 border border-blue-500 text-white p-3 rounded-lg text-center" role="alert">
-                          {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
             
             <p class="text-center text-sm text-gray-400 mt-8">
                 Already have an account?
@@ -48,18 +38,36 @@
         </div>
     </div>
 </div>
-{% comment %} Add script to apply Tailwind classes to form fields {% endcomment %}
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('form input').forEach(field => {
-             if(field.type !== 'submit' && field.type !== 'hidden') {
-                field.classList.add('w-full', 'p-4', 'form-input', 'rounded-lg', 'text-white', 'placeholder-gray-500', 'focus:outline-none', 'transition-all', 'duration-300');
-                const label = document.querySelector(`label[for="${field.id}"]`);
-                if (label) {
-                    field.placeholder = label.textContent;
-                }
+    document.querySelectorAll('form input').forEach(field => {
+         if(field.type !== 'submit' && field.type !== 'hidden') {
+            field.classList.add('w-full', 'p-4', 'form-input', 'rounded-lg', 'text-white', 'placeholder-gray-500', 'focus:outline-none', 'transition-all', 'duration-300');
+        }
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        try {
+            const response = await fetch("{% url 'main:register_ajax' %}", {
+                method: "POST",
+                body: formData,
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                showToast(result.message, 'success');
+                 setTimeout(() => {
+                    window.location.href = "{% url 'main:login' %}";
+                }, 2000);
+            } else {
+                const errorMsg = Object.values(result.errors).flat().join(' ');
+                showToast(errorMsg, 'error');
             }
-        });
+        } catch (error) {
+            console.error('Registration error:', error);
+            showToast('An unexpected error occurred.', 'error');
+        }
     });
 </script>
 {% endblock %}
