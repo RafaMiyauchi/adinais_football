@@ -32,15 +32,7 @@ SECRET_KEY = 'django-insecure-u$^g30s$%tb4x&%4v_@yg_&@mrow=@lw-0$9c6b$i=&eex+1^t
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 DEBUG = True
 
-# CORS Configuration
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
-
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "10.0.2.2", "rafasyah-miyauchi-adinaisfootball.pbp.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "rafasyah-miyauchi-adinaisfootball.pbp.cs.ui.ac.id"]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://rafasyah-miyauchi-adinaisfootball.pbp.cs.ui.ac.id"
@@ -54,8 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
-    'corsheaders'
+    'main'
 ]
 
 MIDDLEWARE = [
@@ -67,7 +58,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'adinais_football.urls'
